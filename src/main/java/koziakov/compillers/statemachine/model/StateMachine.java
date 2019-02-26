@@ -3,8 +3,7 @@ package koziakov.compillers.statemachine.model;
 import koziakov.compillers.statemachine.exceptions.FileParseException;
 import koziakov.compillers.statemachine.exceptions.UnknownSymbolException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -18,10 +17,10 @@ public class StateMachine {
 
     private int lineNum;
 
-    public void load(String fileName) throws FileParseException, FileNotFoundException {
+    public void load(Reader reader) throws FileParseException {
         states.clear();
         lineNum = 0;
-        try(Scanner scanner = new Scanner(new File(fileName))) {
+        try(Scanner scanner = new Scanner(reader)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 loadLine(line);
@@ -29,18 +28,18 @@ public class StateMachine {
         }
     }
 
-    public void parse(String fileName) throws UnknownSymbolException, FileNotFoundException {
+    public void parse(Reader reader) throws UnknownSymbolException {
         currentState = initialState;
-        try(Scanner scanner = new Scanner(new File(fileName))) {
+        try(Scanner scanner = new Scanner(reader)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 parseLine(line);
             }
         }
         if (currentState.isTerminal()) {
-            System.out.println("Terminal state " + currentState.getNumber() + " reached");
+            System.out.println("Valid text");
         } else {
-            System.out.println("Not terminal state " + currentState.getNumber() + " reached");
+            System.out.println("Invalid text");
         }
     }
 
@@ -93,4 +92,15 @@ public class StateMachine {
         }
     }
 
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    public State getInitialState() {
+        return initialState;
+    }
+
+    public Map<Integer, State> getStates() {
+        return states;
+    }
 }

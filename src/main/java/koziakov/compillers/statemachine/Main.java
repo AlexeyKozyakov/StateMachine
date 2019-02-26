@@ -4,7 +4,9 @@ import koziakov.compillers.statemachine.exceptions.FileParseException;
 import koziakov.compillers.statemachine.exceptions.UnknownSymbolException;
 import koziakov.compillers.statemachine.model.StateMachine;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 
 public class Main {
 
@@ -19,8 +21,8 @@ public class Main {
             return;
         }
         try {
-            machine.load(args[0]);
-            machine.parse(args[1]);
+            machine.load(new InputStreamReader(new FileInputStream(args[0])));
+            machine.parse(new InputStreamReader(new FileInputStream(args[1])));
         } catch (FileParseException | UnknownSymbolException | FileNotFoundException e) {
             System.err.println(e);
             e.printStackTrace();
